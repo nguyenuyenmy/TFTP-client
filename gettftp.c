@@ -1,20 +1,34 @@
 
+#include <stdlib.h>
+#include <string.h>
+
 #include <stdio.h>
+#include <netdb.h>
 
 int main(int argc, char** argv) {
 
-    if (argc != 3) {
-        printf("Not enough / too much arguments given \n");
-        printf("Follow this: 'gettftp host file' \n");
-        
-        return 1;   // End the program with an error
+    struct addrinfo hints;
+    struct addrinfo *result, *rp;
+    char *service=NULL;
+    int s;
+
+    if (argc < 2) {
+        fprintf(stderr, "Usage: %s host [service]\n", argv[0]);
+        exit(EXIT_FAILURE);
     }
 
-    char *host = argv[1];
-    char *file = argv[2];
+    memset(&hints, 0, sizeof(struct addrinfo));
 
-    printf("%s", host);
-    printf("%s", file);
+    if (argc == 3) {
+        service = argv[2];
+    }
 
-    return 0;
+    s = getaddrinfo(argv[1], service, &hints, &result);
+
+    if (s!=0) {
+        fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
+        exit(EXIT_FAILURE);
+    }
+
+    return EXIT_SUCCESS;
 }
