@@ -3,7 +3,11 @@
 #include <string.h>
 
 #include <stdio.h>
+#include <sys/types.h>
+#include <sys/socket.h>
 #include <netdb.h>
+
+#include <arpa/inet.h>
 
 int main(int argc, char** argv) {
 
@@ -25,10 +29,19 @@ int main(int argc, char** argv) {
 
     s = getaddrinfo(argv[1], service, &hints, &result);
 
-    if (s!=0) {
+    if (s!=0) { // error occured?
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(s));
         exit(EXIT_FAILURE);
     }
 
+    int sock;
+
+    if ((sock = socket(result->ai_family, result->ai_socktype, result->ai_protocol) < 0)) {
+        perror("socket error");
+        exit(EXIT_FAILURE);
+
+    }
+
+    
     return EXIT_SUCCESS;
 }
