@@ -6,9 +6,11 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 
+//Definition of functions
 char* enougharguments(int argc, char** argv);
 int addrerror(int s);
 int createsocket(struct addrinfo *result);
+
 
 int main(int argc, char** argv) {
 
@@ -23,7 +25,7 @@ int main(int argc, char** argv) {
 	int s = getaddrinfo(argv[1], service, &hints, &result);
 	addrerror(s);
 	
-	// Connection socket to the server
+	// Connecting socket to the server
 	int sock = createsocket(result);
 	
 	return EXIT_SUCCESS;
