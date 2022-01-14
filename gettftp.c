@@ -24,9 +24,8 @@ int main(int argc, char** argv) {
 	addrerror(s);
 	
 	// Connection socket to the server
-	createsocket(result);
-	printf("%d\n", createsocket(result));
-
+	int sock = createsocket(result);
+	
 	return EXIT_SUCCESS;
 }
 
