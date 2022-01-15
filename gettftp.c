@@ -15,7 +15,7 @@ int createsocket(struct addrinfo *result);
 int main(int argc, char** argv) {
 
 	struct addrinfo hints;
-	struct addrinfo *result;
+	struct addrinfo *result, *rp;
 	memset(&hints, 0, sizeof(struct addrinfo));
 	
 	// Verifying the entered arguments
@@ -25,8 +25,25 @@ int main(int argc, char** argv) {
 	int s = getaddrinfo(argv[1], service, &hints, &result);
 	addrerror(s);
 	
+	// Testing our code
+	printf("%i\n", result->ai_flags);
+	printf("%i\n", result->ai_family);
+	printf("%i\n", result->ai_socktype);
+	printf("%i\n", result->ai_protocol);
+	
+	for (rp = result; rp != NULL; rp = rp -> ai_next) {
+		rp->ai_protocol=6;
+	}
+	
+	for (rp = result; rp != NULL; rp = rp -> ai_next) {
+		printf("Family: %d, socket type: %d, protocol: %d\n", rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+		printf("IP addresses: %d\n", *(rp->ai_addr)); 
+	}
+	
+	
 	// Connecting socket to the server
 	int sock = createsocket(result);
+	printf("%d\n", sock);
 	
 	return EXIT_SUCCESS;
 }
@@ -34,7 +51,7 @@ int main(int argc, char** argv) {
 
 // Functions
 char* enougharguments(int argc, char** argv) {
-	char *service=NULL;
+	char *service = NULL;
 
 	if (argc < 2) {
 		fprintf(stderr, "Usage: %s host [service]\n", argv[0]);
